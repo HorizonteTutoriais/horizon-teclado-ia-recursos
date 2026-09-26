@@ -3,7 +3,7 @@
   "enabled": true,
   "title": "Horizonte Tutoriais",
   "message": "Inscreva-se no site e ative o sino 🛎️",
-  "popupDelaySeconds": 8,
+  "popupDelaySeconds": 2,
   "hideForHours": 24,
   "image": "horizon.png"
 }
