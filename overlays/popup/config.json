@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "enabled": true,
+  "title": "Horizonte Tutoriais",
+  "message": "Conheça as novidades do Horizon Teclado IA",
+  "image": "horizon.png",
+  "popupDelaySeconds": 8,
+  "hideForHours": 24
+}
