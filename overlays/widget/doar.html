@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apoie o Projeto Horizon</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .container { max-width: 450px; width: 100%; padding: 40px; text-align: center; }
+        /* Coração Pulsando */
+        .icon { font-size: 60px; margin-bottom: 15px; display: inline-block; animation: pulse 1.5s infinite; }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        h1 { color: #fff; font-size: 26px; margin-bottom: 10px; }
+        .subtitle { color: rgba(255,255,255,0.85); font-size: 15px; margin-bottom: 30px; line-height: 1.5; }
+        .pix-box { background: rgba(255,255,255,0.15); border: 2px dashed rgba(255,255,255,0.6); padding: 20px; border-radius: 15px; margin-bottom: 20px; }
+        .pix-key { font-size: 14px; color: #fff; font-weight: bold; word-break: break-all; margin-bottom: 15px; font-family: monospace; }
+        .btn { background: rgba(255,255,255,0.25); color: white; border: 2px solid rgba(255,255,255,0.6); padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: uppercase; margin-bottom: 10px; }
+        .btn:hover { background: rgba(255,255,255,0.4); }
+        .qr-section { margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.3); }
+        .qr-code { width: 180px; height: 180px; margin: 10px auto; background: #fff; display: flex; align-items: center; justify-content: center; border-radius: 10px; }
+        .copy-feedback { color: #b3ffcc; font-weight: bold; margin-top: 10px; display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">💜</div>
+        <h1>Horizonte Tutoriais</h1>
+        <p class="subtitle">Seu apoio nos mantém gratuitos!</p>
+        <div class="pix-box">
+            <p style="font-size: 12px; color: rgba(255,255,255,0.9); margin-bottom: 10px; font-weight: bold;">CHAVE PIX (E-MAIL)</p>
+            <div class="pix-key" id="pixKey">horizontetutoriais@gmail.com</div>
+            <button class="btn" onclick="copiarChave()">📋 Copiar Chave Pix</button>
+            <div class="copy-feedback" id="feedback">✓ Copiado! Agora cole no seu banco.</div>
+        </div>
+        <div class="qr-section">
+            <p style="font-size: 14px; color: rgba(255,255,255,0.85); margin-bottom: 10px;">Ou escaneie o QR Code:</p>
+            <div class="qr-code">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=horizontetutoriais@gmail.com" alt="QR Code Pix">
+            </div>
+        </div>
+    </div>
+    <script>
+        function copiarChave() {
+            const pixKey = document.getElementById('pixKey').textContent;
+            const el = document.createElement('textarea');
+            el.value = pixKey;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            const feedback = document.getElementById('feedback');
+            feedback.style.display = 'block';
+            setTimeout(() => { feedback.style.display = 'none'; }, 3000);
+        }
+    </script>
+</body>
+</html>

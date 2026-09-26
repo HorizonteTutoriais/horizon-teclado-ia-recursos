@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "enabled": true,
+  "musicEnabled": true,
+  "title": "Horizonte Tutoriais",
+  "background": "bg.png",
+  "profile": "profile.png",
+  "music": "play.mp3",
+  "supportPage": "doar.html"
+}
