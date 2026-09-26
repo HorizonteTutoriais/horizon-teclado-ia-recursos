@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "enabled": true,
   "title": "Horizonte Tutoriais",
-  "message": "Conheça as novidades do Horizon Teclado IA",
-  "image": "horizon.png",
+  "message": "Inscreva-se no site e ative o sino 🛎️",
   "popupDelaySeconds": 8,
-  "hideForHours": 24
+  "hideForHours": 24,
+  "image": "horizon.png"
 }

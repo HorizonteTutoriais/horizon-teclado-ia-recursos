@@ -11,7 +11,7 @@
     <button id="close" aria-label="Fechar">×</button>
     <div id="screenMain" class="screen main-screen">
       <img class="bg" src="bg.png" alt=""><div class="veil"></div>
-      <div class="topbar"><img class="avatar" src="profile.png" alt=""><div class="identity"><h1 id="title">Horizonte Tutoriais</h1><p id="subtitle">Inscreva-se no YouTube e ative o sino</p></div><div class="action-row"><button id="site" class="action-button">Ir para o Site ↗</button><button id="support" class="gift-button" aria-label="Apoiar o projeto">🎁</button></div></div>
+      <div class="topbar"><img class="avatar" src="profile.png" alt=""><div class="identity"><h1 id="title">Horizonte<br>Tutoriais</h1><p id="subtitle">inscreva-se no<br>Site e ative o sino 🛎️</p></div><div class="action-row"><button id="site" class="action-button">Ir para o Site ↗</button><button id="support" class="gift-button" aria-label="Apoiar o projeto">🎁</button></div></div>
       <div class="main-player"><div class="time"><span id="current">0:00</span><span id="duration">-3:04</span></div><input id="progress" type="range" min="0" max="100" value="0"><div class="controls"><button>◀|</button><button id="play">▶</button><button>|▶</button></div><button id="youtube" class="youtube-button">✨ arraste para cima ✨</button></div>
     </div>
     <div id="screenYoutube" class="screen youtube-screen" hidden>
@@ -19,5 +19,15 @@
     </div>
   </section>
 </div>
+  <aside id="modernPopup" class="modern-popup" hidden>
+    <button id="popupClose" class="popup-close" aria-label="Fechar">×</button>
+    <button id="popupTrigger" class="popup-trigger"><img src="../popup/horizon.png" alt=""><span><b>Horizonte Tutoriais</b><small>clique no botão</small></span><strong>›</strong></button>
+    <div id="popupModal" class="popup-modal" hidden>
+      <img class="popup-avatar" src="../popup/horizon.png" alt="Horizonte Tutoriais">
+      <h2 id="popupTitle">Horizonte Tutoriais</h2><p id="popupMessage">Inscreva-se no site e ative o sino 🛎️</p>
+      <label class="popup-check"><input id="popupHide" type="checkbox"> Não mostrar por 24 horas</label>
+      <div class="popup-actions"><button id="popupSite">SITE</button><button id="popupDismiss">FECHAR</button></div>
+    </div>
+  </aside>
 <audio id="audio" preload="metadata" src="play.mp3"></audio><script src="widget.js"></script>
 </body></html>
