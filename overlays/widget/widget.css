@@ -1,0 +1,29 @@
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent;font-family:Arial;color:white}
+#widget{position:fixed;inset:0;pointer-events:none}
+button{color:white;cursor:pointer}
+#collapsed,#panel{pointer-events:auto}
+#collapsed{position:absolute;right:10px;bottom:18px;width:calc(100% - 20px);max-width:350px;height:60px;border:1px solid #fff8;border-radius:35px;background:linear-gradient(100deg,#111827ee,#4b0878ee,#063c9bee);display:flex;align-items:center;padding:6px 10px;text-align:left;box-shadow:0 5px 20px #000b}
+#collapsed img{width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid #ffe344;margin-right:9px}
+#collapsed span{font-size:13px}
+#collapsed small{display:block;font-size:10px;margin-top:3px}
+#collapsed strong{margin-left:auto;font-size:28px;color:#ffe344}
+#panel{position:absolute;right:10px;bottom:18px;width:calc(100% - 20px);max-width:360px;height:min(510px,calc(100% - 36px));border-radius:26px;overflow:hidden;background:#10131e;box-shadow:0 8px 30px #000d}
+#panel[hidden]{display:none}
+#close{position:absolute;right:8px;top:5px;z-index:3;border:0;border-radius:50%;background:#000a;font-size:27px;width:35px;height:35px}
+.background{position:absolute;width:100%;height:100%;object-fit:cover}
+.shade{position:absolute;inset:0;background:linear-gradient(#0002,#0008 55%,#050711f5)}
+.content{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:end;padding:25px 18px 18px;text-align:center}
+.profile{width:78px;height:78px;border-radius:50%;object-fit:cover;border:3px solid #ffe344}
+h1{font-size:20px;margin:5px 0}
+p{font-size:12px;margin:0 0 12px}
+.actions{display:flex;gap:10px;align-items:center}
+.actions button,.transport button,#support{border:1px solid #fff6;background:#ffffff22;border-radius:20px;padding:9px 13px}
+#play,#mainPlay{border-radius:50%;background:white;color:#111}
+#play{width:40px;height:40px}
+.timeline{width:100%;display:flex;gap:7px;align-items:center;font-size:10px;margin-top:15px}
+.timeline input{flex:1;accent-color:white}
+.transport{display:flex;gap:30px;margin:10px}
+.transport button{border:0;background:transparent;font-size:17px}
+#mainPlay{width:48px;height:48px}
+#support{font-size:11px;padding:7px 12px}

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Horizonte Tutoriais</title>
+<link rel="stylesheet" href="widget.css">
+</head>
+<body>
+<div id="widget">
+  <button id="collapsed">
+    <img src="profile.png">
+    <span><b id="miniTitle">Horizonte Tutoriais</b><small>clique no botão</small></span>
+    <strong>♪</strong>
+  </button>
+
+  <section id="panel" hidden>
+    <button id="close">×</button>
+    <img class="background" src="bg.png">
+    <div class="shade"></div>
+    <div class="content">
+      <img class="profile" src="profile.png">
+      <h1 id="title">Horizonte Tutoriais</h1>
+      <p id="subtitle">Inscreva-se no YouTube e ative o sino</p>
+
+      <div class="actions">
+        <button id="play">▶</button>
+        <button id="youtube">Ir para o YouTube</button>
+      </div>
+
+      <div class="timeline">
+        <span id="current">0:00</span>
+        <input id="progress" type="range" min="0" max="100" value="0">
+        <span id="duration">-:--</span>
+      </div>
+
+      <div class="transport">
+        <button> |◀ </button>
+        <button id="mainPlay">▶</button>
+        <button> ▶| </button>
+      </div>
+
+      <button id="support">Conheça Horizonte Tutoriais</button>
+    </div>
+  </section>
+</div>
+
+<audio id="audio" preload="metadata" src="play.mp3"></audio>
+<script src="widget.js"></script>
+</body>
+</html>
