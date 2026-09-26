@@ -1,10 +1,8 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Widget Horizonte Tutoriais</title>
-<link rel="stylesheet" href="widget.css">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Widget Horizonte Tutoriais</title><link rel="stylesheet" href="widget.css">
 </head>
 <body>
 <div id="widget">
@@ -13,28 +11,13 @@
     <button id="close" aria-label="Fechar">×</button>
     <div id="screenMain" class="screen main-screen">
       <img class="bg" src="bg.png" alt=""><div class="veil"></div>
-      <div class="screen-content">
-        <img class="avatar" src="profile.png" alt="Horizonte Tutoriais">
-        <div class="identity"><h1 id="title">Horizonte Tutoriais</h1><p id="subtitle">Inscreva-se e ative o sino</p></div>
-        <div class="links"><button id="play">▶ tocando agora</button><button id="youtube">Ir para o YouTube</button></div>
-        <div class="action-row"><button id="site" class="action-button">Ir para o site</button><button id="support" class="gift-button" aria-label="Apoiar o projeto">🎁</button></div>
-        <div class="hint">arraste para cima para ver o YouTube</div>
-      </div>
+      <div class="topbar"><img class="avatar" src="profile.png" alt=""><div class="identity"><h1 id="title">Horizonte Tutoriais</h1><p id="subtitle">Inscreva-se no YouTube e ative o sino</p></div><div class="action-row"><button id="site" class="action-button">Ir para o Site ↗</button><button id="support" class="gift-button" aria-label="Apoiar o projeto">🎁</button></div></div>
+      <div class="main-player"><div class="time"><span id="current">0:00</span><span id="duration">-3:04</span></div><input id="progress" type="range" min="0" max="100" value="0"><div class="controls"><button>◀|</button><button id="play">▶</button><button>|▶</button></div><button id="youtube" class="youtube-button">✨ arraste para cima ✨</button></div>
     </div>
     <div id="screenYoutube" class="screen youtube-screen" hidden>
-      <img class="bg" src="bg.png" alt=""><div class="veil"></div>
-      <div class="screen-content">
-        <img class="avatar" src="profile.png" alt="Horizonte Tutoriais">
-        <h1>Horizonte Tutoriais</h1><p>Vídeos e novidades</p>
-        <div class="player"><span id="current">0:00</span><input id="progress" type="range" min="0" max="100" value="0"><span id="duration">-:--</span></div>
-        <div class="controls"><button>◀|</button><button id="mainPlay">▶</button><button>|▶</button></div>
-        <button id="openYoutube" class="youtube-button">Abrir canal no YouTube</button>
-        <div class="hint">arraste para baixo para voltar</div>
-      </div>
+      <img class="bg" src="bg.png" alt=""><div class="veil"></div><div class="screen-content"><img class="avatar" src="profile.png" alt=""><h1>Horizonte Tutoriais</h1><p>Vídeos e novidades</p><div class="player"><span>0:00</span><input type="range" min="0" max="100" value="0"><span>-:--</span></div><div class="controls"><button>◀|</button><button id="mainPlay">▶</button><button>|▶</button></div><button id="openYoutube" class="youtube-button">Abrir canal no YouTube</button><div class="hint">arraste para baixo para voltar</div></div>
     </div>
   </section>
 </div>
-<audio id="audio" preload="metadata" src="play.mp3"></audio>
-<script src="widget.js"></script>
-</body>
-</html>
+<audio id="audio" preload="metadata" src="play.mp3"></audio><script src="widget.js"></script>
+</body></html>
