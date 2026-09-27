@@ -78,6 +78,7 @@
       sheet.hidden=false;sheet.classList.remove('expanded');main.hidden=false;yt.hidden=true;
     },80);
   };
+  window.openWidget=openWidget;
   floating.onclick=()=>{if(suppressClick){suppressClick=false;return}openWidget()};
   close.onclick=()=>{
     audio.pause();sheet.hidden=true;floating.hidden=false;window.widgetExpanded=false;
