@@ -12,6 +12,7 @@
   const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
   const maxX=()=>Math.max(0,(innerWidth||screen.width)-54);
   const maxY=()=>Math.max(0,(innerHeight||screen.height)-54);
+  const widgetHalf=27;
   const touchX=t=>(Number.isFinite(t.screenX)&&t.screenX>0)?t.screenX:(dragExpanded?t.clientX:nativeLeft+t.clientX);
   const touchY=t=>(Number.isFinite(t.screenY)&&t.screenY>0)?t.screenY:(dragExpanded?t.clientY:nativeTop+t.clientY);
   const resetFloatingCss=()=>{floating.style.left='0px';floating.style.top='0px'};
@@ -35,12 +36,12 @@
     dragging=false;
     if(dragMoved){
       if(touch&&dragExpanded){lastScreenX=touchX(touch);lastScreenY=touchY(touch)}
-      nativeLeft=clamp(lastScreenX-localTouchX,0,maxX());
-      nativeTop=clamp(lastScreenY-localTouchY,0,maxY());
+      nativeLeft=clamp(lastScreenX-widgetHalf,0,maxX());
+      nativeTop=clamp(lastScreenY-widgetHalf,0,maxY());
       collapseAtPosition();
       suppressClick=true;
     }else if(!cancelled){
-      suppressClick=true;openWidget();
+      suppressClick=false;
     }
     dragMoved=false;dragExpanded=false;
   };
@@ -59,8 +60,8 @@
     }
     if(!dragMoved)return;
     lastScreenX=x;lastScreenY=y;
-    floating.style.left=Math.round(clamp(lastScreenX-localTouchX,0,maxX()))+'px';
-    floating.style.top=Math.round(clamp(lastScreenY-localTouchY,0,maxY()))+'px';
+    floating.style.left=Math.round(clamp(lastScreenX-widgetHalf,0,maxX()))+'px';
+    floating.style.top=Math.round(clamp(lastScreenY-widgetHalf,0,maxY()))+'px';
   },{passive:false});
   floating.addEventListener('touchend',e=>finishDrag(e.changedTouches&&e.changedTouches[0]),{passive:false});
   floating.addEventListener('touchcancel',e=>finishDrag(e.changedTouches&&e.changedTouches[0],true),{passive:false});
@@ -70,7 +71,12 @@
   const openWidget=()=>{
     if(bridge&&typeof bridge.expandWidget==='function')bridge.expandWidget();
     window.widgetExpanded=true;window.userWidgetOpen=true;window.popupOwnsExpansion=false;
-    floating.hidden=true;sheet.hidden=false;sheet.classList.remove('expanded');main.hidden=false;yt.hidden=true;
+    floating.hidden=true;
+    setTimeout(()=>{
+      sheet.style.left='50%';sheet.style.top='50%';sheet.style.right='auto';
+      sheet.style.transform='translate(-50%,-50%)';
+      sheet.hidden=false;sheet.classList.remove('expanded');main.hidden=false;yt.hidden=true;
+    },80);
   };
   floating.onclick=()=>{if(suppressClick){suppressClick=false;return}openWidget()};
   close.onclick=()=>{
