@@ -13,8 +13,8 @@
   const maxX=()=>Math.max(0,(innerWidth||screen.width)-54);
   const maxY=()=>Math.max(0,(innerHeight||screen.height)-54);
   const widgetHalf=27;
-  const touchX=t=>(Number.isFinite(t.screenX)&&t.screenX>0)?t.screenX:(dragExpanded?t.clientX:nativeLeft+t.clientX);
-  const touchY=t=>(Number.isFinite(t.screenY)&&t.screenY>0)?t.screenY:(dragExpanded?t.clientY:nativeTop+t.clientY);
+  const touchX=t=>dragExpanded?t.clientX:nativeLeft+t.clientX;
+  const touchY=t=>dragExpanded?t.clientY:nativeTop+t.clientY;
   const resetFloatingCss=()=>{floating.style.left='0px';floating.style.top='0px'};
   const collapseAtPosition=()=>{
     resetFloatingCss();
