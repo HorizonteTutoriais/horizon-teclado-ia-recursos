@@ -1,3 +1,105 @@
-(()=>{const $=s=>document.querySelector(s),floating=$('#floating'),sheet=$('#sheet'),close=$('#close'),main=$('#screenMain'),yt=$('#screenYoutube'),audio=$('#audio'),play=$('#play'),mainPlay=$('#mainPlay'),progress=$('#progress'),current=$('#current'),duration=$('#duration');let down=0,dragging=false,dragMoved=false,startX=0,startY=0,startLeft=0,startTop=0,nativeLeft=40,nativeTop=120;const bridge=window.AndroidBridge;const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));let suppressClick=false;window.userWidgetOpen=false;floating.addEventListener('touchstart',e=>{const t=e.touches[0];e.preventDefault();dragging=true;dragMoved=false;startX=t.clientX;startY=t.clientY;startLeft=nativeLeft;startTop=nativeTop;window._dragExpanded=false},{passive:false});floating.addEventListener('touchmove',e=>{if(!dragging)return;const t=e.touches[0];e.preventDefault();const dx=t.clientX-startX,dy=t.clientY-startY;if(!dragMoved&&(Math.abs(dx)>3||Math.abs(dy)>3)){dragMoved=true;startX+=nativeLeft;startY+=nativeTop;window._dragExpanded=true;if(bridge&&typeof bridge.expandWidget==='function')bridge.expandWidget();floating.style.left=Math.round(startLeft)+'px';floating.style.top=Math.round(startTop)+'px';return}if(!dragMoved)return;const maxX=Math.max(0,(innerWidth||screen.width)-54),maxY=Math.max(0,(innerHeight||screen.height)-54),nx=clamp(startLeft+t.clientX-startX,0,maxX),ny=clamp(startTop+t.clientY-startY,0,maxY);floating.style.left=Math.round(nx)+'px';floating.style.top=Math.round(ny)+'px'},{passive:false});floating.addEventListener('touchend',e=>{if(!dragging)return;dragging=false;if(dragMoved){const t=e.changedTouches[0],maxX=Math.max(0,(innerWidth||screen.width)-54),maxY=Math.max(0,(innerHeight||screen.height)-54);nativeLeft=clamp(startLeft+t.clientX-startX,0,maxX);nativeTop=clamp(startTop+t.clientY-startY,0,maxY);if(bridge&&typeof bridge.collapseWidgetAt==='function')bridge.collapseWidgetAt(Math.round(nativeLeft),Math.round(nativeTop));floating.style.left='0px';floating.style.top='0px';suppressClick=true}else{suppressClick=true;open()}window._dragExpanded=false;dragMoved=false},{passive:false});floating.addEventListener('contextmenu',e=>e.preventDefault());
-const fmt=t=>isFinite(t)?Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0'):'-:--';const setPlaying=v=>{play.textContent=v?'❚❚ tocando agora':'▶ tocando agora';mainPlay.textContent=v?'❚❚':'▶'};const open=()=>{if(bridge&&typeof bridge.expandWidget==='function')bridge.expandWidget();window.widgetExpanded=true;window.userWidgetOpen=true;window.popupOwnsExpansion=false;floating.hidden=true;sheet.hidden=false;sheet.classList.remove('expanded');main.hidden=false;yt.hidden=true};floating.onclick=e=>{if(suppressClick){suppressClick=false;return}open()};close.onclick=()=>{audio.pause();sheet.hidden=true;floating.hidden=false;window.widgetExpanded=false;window.userWidgetOpen=false;window.popupOwnsExpansion=false;document.querySelector('#modernPopup').hidden=true;floating.style.left='0px';floating.style.top='0px';if(bridge&&typeof bridge.collapseWidgetAt==='function')bridge.collapseWidgetAt(Math.round(nativeLeft),Math.round(nativeTop));else if(bridge&&typeof bridge.collapseWidget==='function')bridge.collapseWidget()};play.onclick=()=>audio.paused?audio.play():audio.pause();mainPlay.onclick=()=>audio.paused?audio.play():audio.pause();audio.onplay=()=>setPlaying(true);audio.onpause=()=>setPlaying(false);audio.ontimeupdate=()=>{current.textContent=fmt(audio.currentTime);progress.value=audio.duration?audio.currentTime/audio.duration*100:0};audio.onloadedmetadata=()=>duration.textContent=fmt(audio.duration);progress.oninput=()=>{if(audio.duration)audio.currentTime=progress.value/100*audio.duration};const ytUrl='https://www.youtube.com/@horizontetutoriais1346';const go=u=>window.open(u,'_blank');const goYoutube=()=>{let left=false;const onBlur=()=>{left=true};window.addEventListener('blur',onBlur,{once:true});window.location.href='intent://www.youtube.com/@horizontetutoriais1346#Intent;scheme=https;package=com.google.android.youtube;end';setTimeout(()=>{if(!left)window.open(ytUrl,'_blank')},1200)};$('#youtube').onclick=goYoutube;$('#openYoutube').onclick=goYoutube;const goSite=()=>{if(window.AndroidBridge&&typeof window.AndroidBridge.openSiteChooser==='function'){window.AndroidBridge.openSiteChooser()}else{window.open('https://horizontetutoriais.github.io/','_blank')}};$('#site').onclick=goSite;$('#support').onclick=()=>go('doar.html');sheet.addEventListener('touchstart',e=>{down=e.touches[0].clientY},{passive:true});sheet.addEventListener('touchend',e=>{const d=down-e.changedTouches[0].clientY;if(Math.abs(d)>45){if(d>0){sheet.classList.add('expanded');main.hidden=true;yt.hidden=false}else{sheet.classList.remove('expanded');main.hidden=false;yt.hidden=true}}},{passive:true});fetch('config.json?widget=two-screens',{cache:'no-store'}).then(r=>r.json()).then(c=>{if(c.enabled===false)document.body.style.display='none';if(c.title)$('#title').textContent=c.title;if(c.subtitle)$('#subtitle').textContent=c.subtitle}).catch(()=>{});})();
-(()=>{const root=document.querySelector('#modernPopup');if(!root)return;const trigger=document.querySelector('#popupTrigger'),modal=document.querySelector('#popupModal'),close=document.querySelector('#popupClose'),dismiss=document.querySelector('#popupDismiss'),site=document.querySelector('#popupSite'),hide=document.querySelector('#popupHide'),title=document.querySelector('#popupTitle'),message=document.querySelector('#popupMessage');let cfg={enabled:true,popupDelaySeconds:2,displaySeconds:6,hideForHours:24,title:'Horizonte Tutoriais',message:'Inscreva-se no site e ative o sino 🛎️'};const hiddenUntil=Number(localStorage.getItem('horizonPopupHiddenUntil')||0);const show=()=>{if(cfg.enabled&&Date.now()>hiddenUntil){window.popupOwnsExpansion=!window.widgetExpanded;if(!window.widgetExpanded){window.widgetExpanded=true;if(window.AndroidBridge&&typeof window.AndroidBridge.expandWidget==='function')window.AndroidBridge.expandWidget()}root.hidden=false;setTimeout(()=>{if(!root.hidden)closeAll()},(Number(cfg.displaySeconds)||6)*1000)}};window.showModernPopup=show;const closeAll=()=>{if(hide.checked)localStorage.setItem('horizonPopupHiddenUntil',String(Date.now()+cfg.hideForHours*3600000));root.hidden=true;modal.hidden=true;if(window.popupOwnsExpansion){window.widgetExpanded=false;const f=document.querySelector('#floating');if(f)f.hidden=false;if(window.AndroidBridge&&typeof window.AndroidBridge.collapseWidget==='function')window.AndroidBridge.collapseWidget();window.popupOwnsExpansion=false}};trigger.onclick=()=>{modal.hidden=false};close.onclick=closeAll;dismiss.onclick=closeAll;site.onclick=()=>{if(window.AndroidBridge&&typeof window.AndroidBridge.openSiteChooser==='function')window.AndroidBridge.openSiteChooser();else window.open('https://horizontetutoriais.github.io/','_blank')};fetch('../popup/config.json?popup=separate-1',{cache:'no-store'}).then(r=>r.json()).then(c=>{cfg={...cfg,...c};title.textContent=cfg.title||title.textContent;message.textContent=cfg.message||message.textContent;setTimeout(show,Math.max(1,Number(cfg.popupDelaySeconds)||8)*1000)}).catch(()=>setTimeout(show,8000))})();
+(()=>{
+  const $=s=>document.querySelector(s);
+  const floating=$('#floating'),sheet=$('#sheet'),close=$('#close');
+  const main=$('#screenMain'),yt=$('#screenYoutube'),audio=$('#audio');
+  const play=$('#play'),mainPlay=$('#mainPlay'),progress=$('#progress');
+  const current=$('#current'),duration=$('#duration'),bridge=window.AndroidBridge;
+  let down=0,dragging=false,dragMoved=false,dragExpanded=false;
+  let startX=0,startY=0,startLeft=40,startTop=120;
+  let localTouchX=0,localTouchY=0,lastScreenX=0,lastScreenY=0;
+  let nativeLeft=40,nativeTop=120,suppressClick=false;
+  window.userWidgetOpen=false;window.widgetExpanded=false;window.popupOwnsExpansion=false;
+  const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
+  const maxX=()=>Math.max(0,(innerWidth||screen.width)-54);
+  const maxY=()=>Math.max(0,(innerHeight||screen.height)-54);
+  const resetFloatingCss=()=>{floating.style.left='0px';floating.style.top='0px'};
+  const collapseAtPosition=()=>{
+    resetFloatingCss();
+    if(bridge&&typeof bridge.collapseWidgetAt==='function')
+      bridge.collapseWidgetAt(Math.round(nativeLeft),Math.round(nativeTop));
+    else if(bridge&&typeof bridge.collapseWidget==='function')bridge.collapseWidget();
+  };
+  window.getWidgetPosition=()=>({left:nativeLeft,top:nativeTop});
+  window.collapseWidgetAtPosition=collapseAtPosition;
+  const expandForDrag=()=>{
+    if(dragExpanded)return;
+    dragExpanded=true;
+    if(bridge&&typeof bridge.expandWidget==='function')bridge.expandWidget();
+    floating.style.left=Math.round(startLeft)+'px';
+    floating.style.top=Math.round(startTop)+'px';
+  };
+  const finishDrag=(touch,cancelled=false)=>{
+    if(!dragging)return;
+    dragging=false;
+    if(dragMoved){
+      if(touch&&dragExpanded){lastScreenX=touch.clientX;lastScreenY=touch.clientY}
+      nativeLeft=clamp(lastScreenX-localTouchX,0,maxX());
+      nativeTop=clamp(lastScreenY-localTouchY,0,maxY());
+      collapseAtPosition();
+      suppressClick=true;
+    }else if(!cancelled){
+      suppressClick=true;openWidget();
+    }
+    dragMoved=false;dragExpanded=false;
+  };
+  floating.addEventListener('touchstart',e=>{
+    const t=e.touches[0];if(!t)return;e.preventDefault();
+    down=1;dragging=true;dragMoved=false;dragExpanded=false;
+    startLeft=nativeLeft;startTop=nativeTop;
+    localTouchX=t.clientX;localTouchY=t.clientY;
+    lastScreenX=startLeft+localTouchX;lastScreenY=startTop+localTouchY;
+  },{passive:false});
+  floating.addEventListener('touchmove',e=>{
+    if(!dragging)return;e.preventDefault();const t=e.touches[0];if(!t)return;
+    if(!dragMoved&&(Math.abs(t.clientX-localTouchX)>3||Math.abs(t.clientY-localTouchY)>3)){
+      dragMoved=true;expandForDrag();return;
+    }
+    if(!dragMoved)return;
+    lastScreenX=t.clientX;lastScreenY=t.clientY;
+    floating.style.left=Math.round(clamp(lastScreenX-localTouchX,0,maxX()))+'px';
+    floating.style.top=Math.round(clamp(lastScreenY-localTouchY,0,maxY()))+'px';
+  },{passive:false});
+  floating.addEventListener('touchend',e=>finishDrag(e.changedTouches&&e.changedTouches[0]),{passive:false});
+  floating.addEventListener('touchcancel',e=>finishDrag(e.changedTouches&&e.changedTouches[0],true),{passive:false});
+  floating.addEventListener('contextmenu',e=>e.preventDefault());
+  const fmt=t=>isFinite(t)?Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0'):'-:--';
+  const setPlaying=v=>{play.textContent=v?'❚❚ tocando agora':'▶ tocando agora';mainPlay.textContent=v?'❚❚':'▶'};
+  const openWidget=()=>{
+    if(bridge&&typeof bridge.expandWidget==='function')bridge.expandWidget();
+    window.widgetExpanded=true;window.userWidgetOpen=true;window.popupOwnsExpansion=false;
+    floating.hidden=true;sheet.hidden=false;sheet.classList.remove('expanded');main.hidden=false;yt.hidden=true;
+  };
+  floating.onclick=()=>{if(suppressClick){suppressClick=false;return}openWidget()};
+  close.onclick=()=>{
+    audio.pause();sheet.hidden=true;floating.hidden=false;window.widgetExpanded=false;
+    window.userWidgetOpen=false;window.popupOwnsExpansion=false;
+    const p=$('#modernPopup');if(p)p.hidden=true;collapseAtPosition();
+  };
+  play.onclick=()=>audio.paused?audio.play():audio.pause();
+  mainPlay.onclick=()=>audio.paused?audio.play():audio.pause();
+  audio.onplay=()=>setPlaying(true);audio.onpause=()=>setPlaying(false);
+  audio.ontimeupdate=()=>{current.textContent=fmt(audio.currentTime);progress.value=audio.duration?audio.currentTime/audio.duration*100:0};
+  audio.onloadedmetadata=()=>duration.textContent=fmt(audio.duration);
+  progress.oninput=()=>{if(audio.duration)audio.currentTime=progress.value/100*audio.duration};
+  const ytUrl='https://www.youtube.com/@horizontetutoriais1346';
+  const go=u=>window.open(u,'_blank');
+  const goYoutube=()=>{let left=false;const onBlur=()=>{left=true};window.addEventListener('blur',onBlur,{once:true});window.location.href='intent://www.youtube.com/@horizontetutoriais1346#Intent;scheme=https;package=com.google.android.youtube;end';setTimeout(()=>{if(!left)window.open(ytUrl,'_blank')},1200)};
+  $('#youtube').onclick=goYoutube;$('#openYoutube').onclick=goYoutube;
+  const goSite=()=>{if(bridge&&typeof bridge.openSiteChooser==='function')bridge.openSiteChooser();else window.open('https://horizontetutoriais.github.io/','_blank')};
+  $('#site').onclick=goSite;$('#support').onclick=()=>go('doar.html');
+  let sheetDown=0;sheet.addEventListener('touchstart',e=>{sheetDown=e.touches[0].clientY},{passive:true});
+  sheet.addEventListener('touchend',e=>{const d=sheetDown-e.changedTouches[0].clientY;if(Math.abs(d)>45){if(d>0){sheet.classList.add('expanded');main.hidden=true;yt.hidden=false}else{sheet.classList.remove('expanded');main.hidden=false;yt.hidden=true}}},{passive:true});
+  fetch('config.json?widget=stable-gesture-20260927',{cache:'no-store'}).then(r=>r.json()).then(c=>{if(c.enabled===false)document.body.style.display='none';if(c.title)$('#title').textContent=c.title;if(c.subtitle)$('#subtitle').textContent=c.subtitle}).catch(()=>{});
+})();
+(()=>{
+  const root=document.querySelector('#modernPopup');if(!root)return;
+  const trigger=document.querySelector('#popupTrigger'),modal=document.querySelector('#popupModal'),close=document.querySelector('#popupClose'),dismiss=document.querySelector('#popupDismiss'),site=document.querySelector('#popupSite'),hide=document.querySelector('#popupHide'),title=document.querySelector('#popupTitle'),message=document.querySelector('#popupMessage');
+  let cfg={enabled:true,popupDelaySeconds:2,displaySeconds:6,hideForHours:24,title:'Horizonte Tutoriais',message:'Inscreva-se no site e ative o sino 🛎️'};
+  const hiddenUntil=Number(localStorage.getItem('horizonPopupHiddenUntil')||0);
+  const show=()=>{if(cfg.enabled&&Date.now()>hiddenUntil){window.popupOwnsExpansion=!window.widgetExpanded;if(window.popupOwnsExpansion){const f=document.querySelector('#floating');if(f){f.hidden=false;const pos=window.getWidgetPosition?window.getWidgetPosition():{left:40,top:120};f.style.left=pos.left+'px';f.style.top=pos.top+'px'}if(window.AndroidBridge&&typeof window.AndroidBridge.expandWidget==='function')window.AndroidBridge.expandWidget()}root.hidden=false;setTimeout(()=>{if(!root.hidden)closeAll()},(Number(cfg.displaySeconds)||6)*1000)}};
+  window.showModernPopup=show;
+  const closeAll=()=>{if(hide.checked)localStorage.setItem('horizonPopupHiddenUntil',String(Date.now()+cfg.hideForHours*3600000));root.hidden=true;modal.hidden=true;if(window.popupOwnsExpansion){window.widgetExpanded=false;const f=document.querySelector('#floating');if(f){f.hidden=false;f.style.left='0px';f.style.top='0px'}if(window.AndroidBridge&&typeof window.AndroidBridge.collapseWidgetAt==='function')if(window.collapseWidgetAtPosition)window.collapseWidgetAtPosition();else if(window.AndroidBridge&&typeof window.AndroidBridge.collapseWidget==='function')window.AndroidBridge.collapseWidget();window.popupOwnsExpansion=false}};
+  trigger.onclick=()=>{modal.hidden=false};close.onclick=closeAll;dismiss.onclick=closeAll;
+  site.onclick=()=>{if(window.AndroidBridge&&typeof window.AndroidBridge.openSiteChooser==='function')window.AndroidBridge.openSiteChooser();else window.open('https://horizontetutoriais.github.io/','_blank')};
+  fetch('../popup/config.json?popup=stable-gesture-20260927',{cache:'no-store'}).then(r=>r.json()).then(c=>{cfg={...cfg,...c};title.textContent=cfg.title||title.textContent;message.textContent=cfg.message||message.textContent;setTimeout(show,Math.max(1,Number(cfg.popupDelaySeconds)||8)*1000)}).catch(()=>setTimeout(show,8000));
+})();
