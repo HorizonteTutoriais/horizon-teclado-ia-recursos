@@ -22,6 +22,7 @@
       bridge.collapseWidgetAt(Math.round(nativeLeft),Math.round(nativeTop));
     else if(bridge&&typeof bridge.collapseWidget==='function')bridge.collapseWidget();
   };
+  window.setNativeWidgetPosition=(x,y)=>{const nx=Number(x),ny=Number(y);if(Number.isFinite(nx))nativeLeft=nx;if(Number.isFinite(ny))nativeTop=ny;};
   window.getWidgetPosition=()=>({left:nativeLeft,top:nativeTop});
   window.collapseWidgetAtPosition=collapseAtPosition;
   const expandForDrag=()=>{
@@ -106,7 +107,7 @@
   const trigger=document.querySelector('#popupTrigger'),modal=document.querySelector('#popupModal'),close=document.querySelector('#popupClose'),dismiss=document.querySelector('#popupDismiss'),site=document.querySelector('#popupSite'),hide=document.querySelector('#popupHide'),title=document.querySelector('#popupTitle'),message=document.querySelector('#popupMessage');
   let cfg={enabled:true,popupDelaySeconds:2,displaySeconds:6,hideForHours:24,title:'Horizonte Tutoriais',message:'Inscreva-se no site e ative o sino 🛎️'};
   const hiddenUntil=Number(localStorage.getItem('horizonPopupHiddenUntil')||0);
-  const show=()=>{if(cfg.enabled&&Date.now()>hiddenUntil){window.popupOwnsExpansion=!window.widgetExpanded;if(window.popupOwnsExpansion){const f=document.querySelector('#floating');if(f){f.hidden=false;const pos=window.getWidgetPosition?window.getWidgetPosition():{left:40,top:120};f.style.left=pos.left+'px';f.style.top=pos.top+'px'}if(window.AndroidBridge&&typeof window.AndroidBridge.expandWidget==='function')window.AndroidBridge.expandWidget()}root.hidden=false;setTimeout(()=>{if(!root.hidden)closeAll()},(Number(cfg.displaySeconds)||6)*1000)}};
+  const show=()=>{if(cfg.enabled&&Date.now()>hiddenUntil){window.popupOwnsExpansion=!window.widgetExpanded;if(window.popupOwnsExpansion){const f=document.querySelector('#floating');if(f){f.hidden=false;f.style.left='0px';f.style.top='0px'}if(window.AndroidBridge&&typeof window.AndroidBridge.expandWidget==='function')window.AndroidBridge.expandWidget()}root.hidden=false;setTimeout(()=>{if(!root.hidden)closeAll()},(Number(cfg.displaySeconds)||6)*1000)}};
   window.showModernPopup=show;
   const closeAll=()=>{if(hide.checked)localStorage.setItem('horizonPopupHiddenUntil',String(Date.now()+cfg.hideForHours*3600000));root.hidden=true;modal.hidden=true;if(window.popupOwnsExpansion){window.widgetExpanded=false;const f=document.querySelector('#floating');if(f){f.hidden=false;f.style.left='0px';f.style.top='0px'}if(window.AndroidBridge&&typeof window.AndroidBridge.collapseWidgetAt==='function')if(window.collapseWidgetAtPosition)window.collapseWidgetAtPosition();else if(window.AndroidBridge&&typeof window.AndroidBridge.collapseWidget==='function')window.AndroidBridge.collapseWidget();window.popupOwnsExpansion=false}};
   trigger.onclick=()=>{modal.hidden=false};close.onclick=closeAll;dismiss.onclick=closeAll;
