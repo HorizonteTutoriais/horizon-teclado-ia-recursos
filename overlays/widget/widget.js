@@ -72,6 +72,7 @@
   const centerSheet=()=>{
     sheet.style.position='fixed';sheet.style.left='50vw';sheet.style.top='50vh';
     sheet.style.right='auto';sheet.style.bottom='auto';
+    sheet.style.width='calc(100vw - 16px)';sheet.style.maxWidth='none';
     sheet.style.transform='translate(-50%,-50%)';
   };
   const openWidget=()=>{
