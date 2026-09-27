@@ -69,15 +69,20 @@
   floating.addEventListener('contextmenu',e=>e.preventDefault());
   const fmt=t=>isFinite(t)?Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0'):'-:--';
   const setPlaying=v=>{play.textContent=v?'❚❚ tocando agora':'▶ tocando agora';mainPlay.textContent=v?'❚❚':'▶'};
+  const centerSheet=()=>{
+    sheet.style.position='fixed';sheet.style.left='50vw';sheet.style.top='50vh';
+    sheet.style.right='auto';sheet.style.bottom='auto';
+    sheet.style.transform='translate(-50%,-50%)';
+  };
   const openWidget=()=>{
     if(bridge&&typeof bridge.expandWidget==='function')bridge.expandWidget();
     window.widgetExpanded=true;window.userWidgetOpen=true;window.popupOwnsExpansion=false;
     floating.hidden=true;
-    setTimeout(()=>{
-      sheet.style.left='50%';sheet.style.top='50%';sheet.style.right='auto';
-      sheet.style.transform='translate(-50%,-50%)';
-      sheet.hidden=false;sheet.classList.remove('expanded');main.hidden=false;yt.hidden=true;
-    },80);
+    sheet.hidden=false;sheet.classList.remove('expanded');main.hidden=false;yt.hidden=true;
+    centerSheet();
+    requestAnimationFrame(()=>{centerSheet();requestAnimationFrame(centerSheet)});
+    setTimeout(centerSheet,180);
+    setTimeout(centerSheet,360);
   };
   window.openWidget=openWidget;
   floating.onclick=()=>{if(suppressClick){suppressClick=false;return}openWidget()};
