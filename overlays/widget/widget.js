@@ -12,6 +12,8 @@
   const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
   const maxX=()=>Math.max(0,(innerWidth||screen.width)-54);
   const maxY=()=>Math.max(0,(innerHeight||screen.height)-54);
+  const touchX=t=>(Number.isFinite(t.screenX)&&t.screenX>0)?t.screenX:(dragExpanded?t.clientX:nativeLeft+t.clientX);
+  const touchY=t=>(Number.isFinite(t.screenY)&&t.screenY>0)?t.screenY:(dragExpanded?t.clientY:nativeTop+t.clientY);
   const resetFloatingCss=()=>{floating.style.left='0px';floating.style.top='0px'};
   const collapseAtPosition=()=>{
     resetFloatingCss();
@@ -32,7 +34,7 @@
     if(!dragging)return;
     dragging=false;
     if(dragMoved){
-      if(touch&&dragExpanded){lastScreenX=touch.clientX;lastScreenY=touch.clientY}
+      if(touch&&dragExpanded){lastScreenX=touchX(touch);lastScreenY=touchY(touch)}
       nativeLeft=clamp(lastScreenX-localTouchX,0,maxX());
       nativeTop=clamp(lastScreenY-localTouchY,0,maxY());
       collapseAtPosition();
@@ -46,16 +48,17 @@
     const t=e.touches[0];if(!t)return;e.preventDefault();
     down=1;dragging=true;dragMoved=false;dragExpanded=false;
     startLeft=nativeLeft;startTop=nativeTop;
-    localTouchX=t.clientX;localTouchY=t.clientY;
-    lastScreenX=startLeft+localTouchX;lastScreenY=startTop+localTouchY;
+    lastScreenX=touchX(t);lastScreenY=touchY(t);
+    localTouchX=lastScreenX-startLeft;localTouchY=lastScreenY-startTop;
   },{passive:false});
   floating.addEventListener('touchmove',e=>{
     if(!dragging)return;e.preventDefault();const t=e.touches[0];if(!t)return;
-    if(!dragMoved&&(Math.abs(t.clientX-localTouchX)>3||Math.abs(t.clientY-localTouchY)>3)){
+    const x=touchX(t),y=touchY(t);
+    if(!dragMoved&&(Math.abs(x-(startLeft+localTouchX))>3||Math.abs(y-(startTop+localTouchY))>3)){
       dragMoved=true;expandForDrag();return;
     }
     if(!dragMoved)return;
-    lastScreenX=t.clientX;lastScreenY=t.clientY;
+    lastScreenX=x;lastScreenY=y;
     floating.style.left=Math.round(clamp(lastScreenX-localTouchX,0,maxX()))+'px';
     floating.style.top=Math.round(clamp(lastScreenY-localTouchY,0,maxY()))+'px';
   },{passive:false});
