@@ -4,6 +4,7 @@
   "title": "Horizonte Tutoriais",
   "message": "Inscreva-se no site e ative o sino 🛎️",
   "popupDelaySeconds": 2,
+  "displaySeconds": 6,
   "hideForHours": 24,
   "image": "horizon.png"
 }
