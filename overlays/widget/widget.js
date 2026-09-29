@@ -74,10 +74,11 @@
     sheet.style.width='calc(100vw - 16px)';sheet.style.maxWidth='none';
     sheet.style.transform='translate(-50%,-50%)';
   };
+  const restoreFloatingVisual=()=>{const f=document.querySelector('#floating');if(!f)return;const pos=window.getWidgetPosition?window.getWidgetPosition():{left:40,top:120};f.hidden=false;f.style.left=Math.round(pos.left)+'px';f.style.top=Math.round(pos.top)+'px';f.style.zIndex='100';};
   const openWidget=()=>{
     if(bridge&&typeof bridge.expandWidget==='function')bridge.expandWidget();
     window.widgetExpanded=true;window.userWidgetOpen=true;window.popupOwnsExpansion=false;
-    floating.hidden=true;
+    restoreFloatingVisual();
     sheet.hidden=false;sheet.classList.remove('expanded');main.hidden=false;yt.hidden=true;
     centerSheet();
     requestAnimationFrame(()=>{centerSheet();requestAnimationFrame(centerSheet)});
@@ -116,7 +117,7 @@
   const show=()=>{if(cfg.enabled&&Date.now()>hiddenUntil){popupWidgetWasOpen=!!(window.widgetExpanded||window.userWidgetOpen||!document.querySelector('#sheet').hidden);window.popupOwnsExpansion=!popupWidgetWasOpen;if(window.popupOwnsExpansion){const f=document.querySelector('#floating');if(f){f.hidden=false;const pos=window.getWidgetPosition?window.getWidgetPosition():{left:40,top:120};f.style.left=Math.round(pos.left)+'px';f.style.top=Math.round(pos.top)+'px'}if(window.AndroidBridge&&typeof window.AndroidBridge.expandWidget==='function')window.AndroidBridge.expandWidget()}root.hidden=false;setTimeout(()=>{if(!root.hidden)closeAll()},(Number(cfg.displaySeconds)||6)*1000)}};
   window.showModernPopup=show;
   const restoreFloating=()=>{const f=document.querySelector('#floating');if(!f)return;const pos=window.getWidgetPosition?window.getWidgetPosition():{left:40,top:120};f.hidden=false;f.style.left=Math.round(pos.left)+'px';f.style.top=Math.round(pos.top)+'px';f.style.zIndex='100';};
-  const closeAll=()=>{if(hide.checked)localStorage.setItem('horizonPopupHiddenUntil',String(Date.now()+cfg.hideForHours*3600000));root.hidden=true;modal.hidden=true;if(popupWidgetWasOpen||window.widgetExpanded||window.userWidgetOpen){window.widgetExpanded=true;window.userWidgetOpen=true;const f=document.querySelector('#floating');if(f)f.hidden=true;const sheet=document.querySelector('#sheet');if(sheet)sheet.hidden=false;}else if(window.popupOwnsExpansion){window.widgetExpanded=false;restoreFloating();if(window.collapseWidgetAtPosition)window.collapseWidgetAtPosition();else if(window.AndroidBridge&&typeof window.AndroidBridge.collapseWidget==='function')window.AndroidBridge.collapseWidget();window.popupOwnsExpansion=false;setTimeout(restoreFloating,80);setTimeout(restoreFloating,240);}popupWidgetWasOpen=false;};
+  const closeAll=()=>{if(hide.checked)localStorage.setItem('horizonPopupHiddenUntil',String(Date.now()+cfg.hideForHours*3600000));root.hidden=true;modal.hidden=true;if(popupWidgetWasOpen||window.widgetExpanded||window.userWidgetOpen){window.widgetExpanded=true;window.userWidgetOpen=true;restoreFloatingVisual();const sheet=document.querySelector('#sheet');if(sheet)sheet.hidden=false;}else if(window.popupOwnsExpansion){window.widgetExpanded=false;restoreFloating();if(window.collapseWidgetAtPosition)window.collapseWidgetAtPosition();else if(window.AndroidBridge&&typeof window.AndroidBridge.collapseWidget==='function')window.AndroidBridge.collapseWidget();window.popupOwnsExpansion=false;setTimeout(restoreFloating,80);setTimeout(restoreFloating,240);}popupWidgetWasOpen=false;};
   trigger.onclick=()=>{modal.hidden=false};close.onclick=closeAll;dismiss.onclick=closeAll;
   site.onclick=()=>{if(window.AndroidBridge&&typeof window.AndroidBridge.openSiteChooser==='function')window.AndroidBridge.openSiteChooser();else window.open('https://horizontetutoriais.github.io/','_blank')};
   fetch('../popup/config.json?popup=stable-gesture-20260927',{cache:'no-store'}).then(r=>r.json()).then(c=>{cfg={...cfg,...c};title.textContent=cfg.title||title.textContent;message.textContent=cfg.message||message.textContent;setTimeout(show,Math.max(1,Number(cfg.popupDelaySeconds)||8)*1000)}).catch(()=>setTimeout(show,8000));
