@@ -15,7 +15,7 @@
   const widgetHalf=27;
   const touchX=t=>dragExpanded?t.clientX:nativeLeft+t.clientX;
   const touchY=t=>dragExpanded?t.clientY:nativeTop+t.clientY;
-  const resetFloatingCss=()=>{floating.style.left='0px';floating.style.top='0px'};
+  const resetFloatingCss=()=>{floating.style.left=Math.round(nativeLeft)+'px';floating.style.top=Math.round(nativeTop)+'px'};
   const collapseAtPosition=()=>{
     resetFloatingCss();
     if(bridge&&typeof bridge.collapseWidgetAt==='function')
@@ -28,7 +28,6 @@
   const expandForDrag=()=>{
     if(dragExpanded)return;
     dragExpanded=true;
-    if(bridge&&typeof bridge.expandWidget==='function')bridge.expandWidget();
     floating.style.left=Math.round(startLeft)+'px';
     floating.style.top=Math.round(startTop)+'px';
   };
@@ -115,7 +114,7 @@
   const hiddenUntil=Number(localStorage.getItem('horizonPopupHiddenUntil')||0);
   const show=()=>{if(cfg.enabled&&Date.now()>hiddenUntil){window.popupOwnsExpansion=!window.widgetExpanded;if(window.popupOwnsExpansion){const f=document.querySelector('#floating');if(f){f.hidden=false;const pos=window.getWidgetPosition?window.getWidgetPosition():{left:40,top:120};f.style.left=Math.round(pos.left)+'px';f.style.top=Math.round(pos.top)+'px'}if(window.AndroidBridge&&typeof window.AndroidBridge.expandWidget==='function')window.AndroidBridge.expandWidget()}root.hidden=false;setTimeout(()=>{if(!root.hidden)closeAll()},(Number(cfg.displaySeconds)||6)*1000)}};
   window.showModernPopup=show;
-  const closeAll=()=>{if(hide.checked)localStorage.setItem('horizonPopupHiddenUntil',String(Date.now()+cfg.hideForHours*3600000));root.hidden=true;modal.hidden=true;if(window.popupOwnsExpansion){window.widgetExpanded=false;const f=document.querySelector('#floating');if(f){f.hidden=false;f.style.left='0px';f.style.top='0px'}if(window.AndroidBridge&&typeof window.AndroidBridge.collapseWidgetAt==='function')if(window.collapseWidgetAtPosition)window.collapseWidgetAtPosition();else if(window.AndroidBridge&&typeof window.AndroidBridge.collapseWidget==='function')window.AndroidBridge.collapseWidget();window.popupOwnsExpansion=false}};
+  const closeAll=()=>{if(hide.checked)localStorage.setItem('horizonPopupHiddenUntil',String(Date.now()+cfg.hideForHours*3600000));root.hidden=true;modal.hidden=true;if(window.popupOwnsExpansion){window.widgetExpanded=false;const f=document.querySelector('#floating');if(f){f.hidden=false;const pos=window.getWidgetPosition?window.getWidgetPosition():{left:40,top:120};f.style.left=Math.round(pos.left)+'px';f.style.top=Math.round(pos.top)+'px'}if(window.AndroidBridge&&typeof window.AndroidBridge.collapseWidgetAt==='function')if(window.collapseWidgetAtPosition)window.collapseWidgetAtPosition();else if(window.AndroidBridge&&typeof window.AndroidBridge.collapseWidget==='function')window.AndroidBridge.collapseWidget();window.popupOwnsExpansion=false}};
   trigger.onclick=()=>{modal.hidden=false};close.onclick=closeAll;dismiss.onclick=closeAll;
   site.onclick=()=>{if(window.AndroidBridge&&typeof window.AndroidBridge.openSiteChooser==='function')window.AndroidBridge.openSiteChooser();else window.open('https://horizontetutoriais.github.io/','_blank')};
   fetch('../popup/config.json?popup=stable-gesture-20260927',{cache:'no-store'}).then(r=>r.json()).then(c=>{cfg={...cfg,...c};title.textContent=cfg.title||title.textContent;message.textContent=cfg.message||message.textContent;setTimeout(show,Math.max(1,Number(cfg.popupDelaySeconds)||8)*1000)}).catch(()=>setTimeout(show,8000));
