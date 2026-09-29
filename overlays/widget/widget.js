@@ -15,7 +15,7 @@
   const widgetHalf=27;
   const touchX=t=>dragExpanded?t.clientX:nativeLeft+t.clientX;
   const touchY=t=>dragExpanded?t.clientY:nativeTop+t.clientY;
-  const resetFloatingCss=()=>{floating.style.left=Math.round(nativeLeft)+'px';floating.style.top=Math.round(nativeTop)+'px'};
+  const resetFloatingCss=()=>{floating.style.left='0px';floating.style.top='0px';floating.style.display='block';floating.style.visibility='visible';floating.style.opacity='1'};
   const collapseAtPosition=()=>{
     resetFloatingCss();
     if(bridge&&typeof bridge.collapseWidgetAt==='function')
@@ -74,7 +74,7 @@
     sheet.style.width='calc(100vw - 16px)';sheet.style.maxWidth='none';
     sheet.style.transform='translate(-50%,-50%)';
   };
-  const restoreFloatingVisual=()=>{const f=document.querySelector('#floating');if(!f)return;const pos=window.getWidgetPosition?window.getWidgetPosition():{left:40,top:120};f.hidden=false;f.style.left=Math.round(pos.left)+'px';f.style.top=Math.round(pos.top)+'px';f.style.zIndex='100';};
+  const restoreFloatingVisual=()=>{const f=document.querySelector('#floating');if(!f)return;const pos=window.getWidgetPosition?window.getWidgetPosition():{left:40,top:120};f.hidden=false;f.style.display='block';f.style.visibility='visible';f.style.opacity='1';f.style.left=Math.round(pos.left)+'px';f.style.top=Math.round(pos.top)+'px';f.style.zIndex='100';};
   const openWidget=()=>{
     if(bridge&&typeof bridge.expandWidget==='function')bridge.expandWidget();
     window.widgetExpanded=true;window.userWidgetOpen=true;window.popupOwnsExpansion=false;
