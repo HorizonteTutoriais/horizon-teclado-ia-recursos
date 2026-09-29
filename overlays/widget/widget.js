@@ -87,10 +87,14 @@
   };
   window.openWidget=openWidget;
   floating.onclick=()=>{if(suppressClick){suppressClick=false;return}openWidget()};
+  const restoreCollapsedBall=()=>{sheet.hidden=true;floating.hidden=false;floating.style.display='block';floating.style.visibility='visible';floating.style.opacity='1';floating.style.left='0px';floating.style.top='0px';floating.style.zIndex='100';};
   close.onclick=()=>{
-    audio.pause();sheet.hidden=true;floating.hidden=false;window.widgetExpanded=false;
-    window.userWidgetOpen=false;window.popupOwnsExpansion=false;
-    const p=$('#modernPopup');if(p)p.hidden=true;collapseAtPosition();
+    audio.pause();window.widgetExpanded=false;window.userWidgetOpen=false;window.popupOwnsExpansion=false;
+    const p=$('#modernPopup');if(p)p.hidden=true;
+    restoreCollapsedBall();collapseAtPosition();
+    setTimeout(()=>{restoreCollapsedBall();collapseAtPosition()},80);
+    setTimeout(restoreCollapsedBall,240);
+    setTimeout(restoreCollapsedBall,500);
   };
   play.onclick=()=>audio.paused?audio.play():audio.pause();
   mainPlay.onclick=()=>audio.paused?audio.play():audio.pause();
