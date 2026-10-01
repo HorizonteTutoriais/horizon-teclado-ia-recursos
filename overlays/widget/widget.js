@@ -2,8 +2,8 @@
   const $=s=>document.querySelector(s);
   const floating=$('#floating'),sheet=$('#sheet'),close=$('#close');
   const main=$('#screenMain'),yt=$('#screenYoutube'),audio=$('#audio');
-  const play=$('#play'),mainPlay=$('#mainPlay'),progress=$('#progress');
-  const current=$('#current'),duration=$('#duration'),bridge=window.AndroidBridge;
+  const play=$('#play'),mainPlay=$('#mainPlay'),progress=$('#progress'),ytProgress=$('#ytProgress');
+  const current=$('#current'),duration=$('#duration'),ytCurrent=$('#ytCurrent'),ytDuration=$('#ytDuration'),bridge=window.AndroidBridge;
   let down=0,dragging=false,dragMoved=false,dragExpanded=false;
   let startX=0,startY=0,startLeft=40,startTop=120;
   let localTouchX=0,localTouchY=0,lastScreenX=0,lastScreenY=0;
@@ -67,7 +67,12 @@
   floating.addEventListener('touchcancel',e=>finishDrag(e.changedTouches&&e.changedTouches[0],true),{passive:false});
   floating.addEventListener('contextmenu',e=>e.preventDefault());
   const fmt=t=>isFinite(t)?Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0'):'-:--';
-  const setPlaying=v=>{play.textContent=v?'❚❚ tocando agora':'▶ tocando agora';mainPlay.textContent=v?'❚❚':'▶'};
+  const setPlaying=v=>{
+    const icon=v?'❚❚':'▶';
+    play.textContent=icon;mainPlay.textContent=icon;
+    play.setAttribute('aria-label',v?'Pausar música':'Reproduzir música');
+    mainPlay.setAttribute('aria-label',v?'Pausar música':'Reproduzir música');
+  };
   const centerSheet=()=>{
     sheet.style.position='fixed';sheet.style.left='50vw';sheet.style.top='50vh';
     sheet.style.right='auto';sheet.style.bottom='auto';
@@ -94,12 +99,42 @@
     setTimeout(restoreCollapsedBall,240);
     setTimeout(restoreCollapsedBall,500);
   };
-  play.onclick=()=>audio.paused?audio.play():audio.pause();
-  mainPlay.onclick=()=>audio.paused?audio.play():audio.pause();
+  const toggleAudio=()=>{const result=audio.paused?audio.play():audio.pause();if(result&&typeof result.catch==='function')result.catch(()=>setPlaying(false));};
+  play.onclick=toggleAudio;
+  mainPlay.onclick=toggleAudio;
   audio.onplay=()=>setPlaying(true);audio.onpause=()=>setPlaying(false);
-  audio.ontimeupdate=()=>{current.textContent=fmt(audio.currentTime);progress.value=audio.duration?audio.currentTime/audio.duration*100:0};
-  audio.onloadedmetadata=()=>duration.textContent=fmt(audio.duration);
-  progress.oninput=()=>{if(audio.duration)audio.currentTime=progress.value/100*audio.duration};
+  const syncProgress=()=>{
+    const rawDuration=Number(audio.duration);
+    const rawCurrent=Number(audio.currentTime);
+    const hasDuration=Number.isFinite(rawDuration)&&rawDuration>0;
+    const now=Number.isFinite(rawCurrent)&&rawCurrent>=0?rawCurrent:0;
+    const percent=hasDuration?Math.max(0,Math.min(100,now/rawDuration*100)):0;
+    const total=hasDuration?fmt(rawDuration):'-:--';
+    current.textContent=fmt(now);duration.textContent=total;
+    ytCurrent.textContent=fmt(now);ytDuration.textContent=total;
+    progress.value=String(percent);ytProgress.value=String(percent);
+    progress.disabled=!hasDuration;ytProgress.disabled=!hasDuration;
+  };
+  audio.addEventListener('timeupdate',syncProgress);
+  audio.addEventListener('loadedmetadata',syncProgress);
+  audio.addEventListener('durationchange',syncProgress);
+  audio.addEventListener('loadeddata',syncProgress);
+  audio.addEventListener('canplay',syncProgress);
+  audio.addEventListener('progress',syncProgress);
+  audio.addEventListener('seeked',syncProgress);
+  audio.addEventListener('play',syncProgress);
+  audio.addEventListener('pause',syncProgress);
+  audio.addEventListener('ended',()=>{syncProgress();setPlaying(false)});
+  const seek=value=>{
+    const total=Number(audio.duration),next=Number(value);
+    if(Number.isFinite(total)&&total>0&&Number.isFinite(next)){
+      audio.currentTime=Math.max(0,Math.min(total,next/100*total));
+      syncProgress();
+    }
+  };
+  progress.oninput=()=>seek(progress.value);
+  ytProgress.oninput=()=>seek(ytProgress.value);
+  syncProgress();
   const ytUrl='https://www.youtube.com/@horizontetutoriais1346';
   const go=u=>window.open(u,'_blank');
   const goYoutube=()=>{let left=false;const onBlur=()=>{left=true};window.addEventListener('blur',onBlur,{once:true});window.location.href='intent://www.youtube.com/@horizontetutoriais1346#Intent;scheme=https;package=com.google.android.youtube;end';setTimeout(()=>{if(!left)window.open(ytUrl,'_blank')},1200)};
